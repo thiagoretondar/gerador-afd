@@ -4,6 +4,7 @@
 
 char f[200];
 int p;
+int aceito;
 
 /* Cabeçalhos */
 void e0(); // estado inicial e final
@@ -22,13 +23,22 @@ void proximoEstadoFinal();
 int main(int argc, char const *argv[]) {
 
     if (argc == 2) {
-        printf("A palavra %s foi ", argv[1]);
         strcpy(f, argv[1]);
     }
 
     p = 0;
 
     e0();
+
+    if (!aceito) {
+        printf("%s\n", argv[1]);
+        printf("%*s" "%s\n", p - 1, " ", "^");
+        int i;
+        for (i = 0; i < p - 1; ++i) {
+            putchar('_');
+        }
+        printf("|\n");
+    }
 
     return 0;
 }
@@ -107,12 +117,12 @@ void e4() { // pode ser estado final
 
 void aceita() {
 
-    printf("aceita\n");
-    exit(0);
+    printf("A palavra foi aceita\n");
+    aceito = 1;
 }
 
 void rejeita() {
 
-    printf("rejeitada\n");
-    exit(0);
+    printf("A palavra foi rejeitada\n");
+    aceito = 0;
 }
