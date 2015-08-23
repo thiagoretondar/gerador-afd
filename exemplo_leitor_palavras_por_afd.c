@@ -1,22 +1,25 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 char f[200];
 int p;
 
 /* Cabeçalhos */
-void e0();
-void e1();
-void e2();
-void e3();
-void e4();
+void e0(); // estado inicial e final
+void e1(); // estado intermediário
+void e2(); // estado intermediári
+void e3(); // estado final
+void e4(); // estado final
 
 void rejeita();
 void aceita();
 
 void proximaLetra();
+void proximoEstado();
+void proximoEstadoFinal();
 
-void main(int argc, char const *argv[]) {
+int main(int argc, char const *argv[]) {
 
     if (argc == 2) {
         printf("A palavra %s foi ", argv[1]);
@@ -34,28 +37,33 @@ void proximaLetra() {
     p++;
 }
 
+void proximoEstado(void (*proxEstado)()) {
+    // necessário incrementar posição de letra a ser lida
+    proximaLetra();
+
+    // chama a próxima função
+    (*proxEstado)();
+}
+
+void finalizaOuVaiParaEstadoInicial(void (*estadoInicial)()) {
+    proximaLetra();
+    if (f[p] == 0) { // não existe mais nada para analisar
+        aceita();
+    } else { // existe string para ser analisada
+        (*estadoInicial)(); // manda para o começo
+    }
+}
+
 void e0() {
 
     if (f[p] == 'a') { // estado inicial e final
-        proximaLetra();
-        if (f[p] == 0) { // se não tiver mais nada para ser analisado
-            aceita();
-        } else {
-            e0();
-        }
+       finalizaOuVaiParaEstadoInicial(&e0);
     } else if (f[p] == 'b') { // estado inicial e final
-        proximaLetra();
-        if (f[p] == 0) {
-            aceita();
-        } else {
-            e0();
-        }
+       finalizaOuVaiParaEstadoInicial(&e0);
     } else if (f[p] == 'e') { // estado inicial
-        proximaLetra();
-        e1();
+        proximoEstado(&e1);
     } else if (f[p] == 'i') { // estado inicial
-        proximaLetra();
-        e4();
+        proximoEstado(&e4);
     } else {
         rejeita();
     }
@@ -64,8 +72,7 @@ void e0() {
 void e1() { // estado intermediário
 
     if (f[p] == 'l') {
-        proximaLetra();
-        e2();
+        proximoEstado(&e2);
     } else {
         rejeita();
     }
@@ -74,8 +81,7 @@ void e1() { // estado intermediário
 void e2() { // estado intermediário
 
     if (f[p] == 's') {
-        proximaLetra();
-        e3();
+        proximoEstado(&e3);
     } else {
         rejeita();
     }
@@ -84,12 +90,7 @@ void e2() { // estado intermediário
 void e3() { // pode ser estado final
 
     if (f[p] == 'e') {
-        proximaLetra();
-        if (f[p] == 0) { // não existe mais nada para analisar
-            aceita();
-        } else { // existe string para ser analisada
-            e0(); // manda para o começo
-        }
+        finalizaOuVaiParaEstadoInicial(&e0);
     } else {
         rejeita();
     }
@@ -98,12 +99,7 @@ void e3() { // pode ser estado final
 void e4() { // pode ser estado final
 
     if (f[p] == 'f') {
-        proximaLetra();
-        if (f[p] == 0) { // não existe mais nada para analisar
-            aceita();
-        } else { // existe string para ser analisada
-            e0(); // manda para o começo
-        }
+        finalizaOuVaiParaEstadoInicial(&e0);
     } else {
         rejeita();
     }
