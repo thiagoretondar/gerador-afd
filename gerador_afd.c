@@ -38,9 +38,9 @@ int main (int argc, char const *argv[]) {
     PerguntaQuantidadeSimbolos();
 	PerguntaSimbolos();
     PerguntaQuantidadeEstados();
-    //PerguntaEstadoInicial();
-	//PerguntaQuantidadeEstadosFinais();
-    //PerguntaEstadosFinais();
+    PerguntaEstadoInicial();
+    PerguntaQuantidadeEstadosFinais();
+    PerguntaEstadosFinais();
     PerguntaSequenciaDeEstados();
 
     int i, j, total = 0;
@@ -85,6 +85,8 @@ void PerguntaQuantidadeEstadosFinais() {
 }
 
 void PerguntaEstadosFinais() {
+    ZerarVetorEstadosFinais();
+
     int i;
     for (i = 0; i < qtdEstadosFinais; i++) {
         printf("\t%d. Qual o estado final %d? R: ", i + 1, i);
@@ -101,17 +103,23 @@ void PerguntaSequenciaDeEstados() {
             scanf("%s", numeroEstado);
 
             int proxEstado = atoi(numeroEstado);
-            // TODO: se existir um próximo estado
-            //if (proxEstado != -1) {
-                sequenciaEstados[total][0] = i;
-                sequenciaEstados[total][1] = j;
-                sequenciaEstados[total][2] = proxEstado;
 
-                total++;
-            //}
+            sequenciaEstados[total][0] = i;
+            sequenciaEstados[total][1] = j;
+            sequenciaEstados[total][2] = proxEstado;
+
+            total++;
         }
         printf("\n");
     }
+}
+
+
+void ZerarVetorEstadosFinais() {
+    // TODO: zerar o vetor dos estados finais
+    // esse vetor será um vetor booleano, onde a posição
+    // do estado vai indicar se o estado é (1) ou não (0)
+    // um estado final
 }
 
 /*void GeraPrograma(){
