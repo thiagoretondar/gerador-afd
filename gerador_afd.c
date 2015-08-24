@@ -42,6 +42,16 @@ int main (int argc, char const *argv[]) {
 	//PerguntaQuantidadeEstadosFinais();
     //PerguntaEstadosFinais();
     PerguntaSequenciaDeEstados();
+
+    int i, j, total = 0;
+    char numeroEstado[2];
+    for (i = 0; i < qtdEstados; i++) {
+        for (j = 0; j < qtdSimbolos; j++) {
+            printf("[%d,%d,%d]\n", sequenciaEstados[total][0],sequenciaEstados[total][1], sequenciaEstados[total][2]);
+            total++;
+        }
+    }
+
     return 0;
 }
 
@@ -83,11 +93,22 @@ void PerguntaEstadosFinais() {
 }
 
 void PerguntaSequenciaDeEstados() {
-    int i, j;
+    int i, j, total = 0;
+    char numeroEstado[2];
     for (i = 0; i < qtdEstados; i++) {
         for (j = 0; j < qtdSimbolos; j++) {
             printf("\tPara o estado e%d e símbolo %c qual o próximo estado? ", i, simbolos[j]);
-            printf("\n");
+            scanf("%s", numeroEstado);
+
+            int proxEstado = atoi(numeroEstado);
+            // TODO: se existir um próximo estado
+            //if (proxEstado != -1) {
+                sequenciaEstados[total][0] = i;
+                sequenciaEstados[total][1] = j;
+                sequenciaEstados[total][2] = proxEstado;
+
+                total++;
+            //}
         }
         printf("\n");
     }
