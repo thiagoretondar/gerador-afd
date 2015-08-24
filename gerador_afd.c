@@ -28,10 +28,14 @@ void PerguntaEstadoInicial();
 void PerguntaQuantidadeEstadosFinais();
 void PerguntaEstadosFinais();
 void PerguntaSequenciaDeEstados();
-void MontaMatrizEntrada();
 void PerguntaTipoDePrograma();
+
+void MontaMatrizEntrada();
+
 void GeraProgramaGOTO();
 void GeraProgramaFunc();
+
+void ZerarVetorEstadosFinais();
 
 int main (int argc, char const *argv[]) {
     setlocale(LC_ALL, "Portuguese");
@@ -43,14 +47,15 @@ int main (int argc, char const *argv[]) {
     PerguntaEstadosFinais();
     PerguntaSequenciaDeEstados();
 
-    int i, j, total = 0;
+    // imprime vetor de sequencia
+    /*int i, j, total = 0;
     char numeroEstado[2];
     for (i = 0; i < qtdEstados; i++) {
         for (j = 0; j < qtdSimbolos; j++) {
             printf("[%d,%d,%d]\n", sequenciaEstados[total][0],sequenciaEstados[total][1], sequenciaEstados[total][2]);
             total++;
         }
-    }
+    }*/
 
     return 0;
 }
@@ -81,7 +86,21 @@ void PerguntaEstadoInicial() {
 
 void PerguntaQuantidadeEstadosFinais() {
     printf("Quantos estados finais? R: ");
-    scanf("%d", &qtdEstadosFinais);
+
+    int qtd;
+    scanf("%d", &qtd);
+
+    if (qtd > qtdEstados) {
+        printf("ERRO: quantidade de estados finais maior do que a quantidade de estados totais!\n");
+        printf("Digite novamente\n");
+        PerguntaQuantidadeEstadosFinais();
+    } else if (qtd <= 0) {
+        printf("ERRO: quantidade de estados finais menor do que zero!\n");
+        printf("Digite novamente\n");
+        PerguntaQuantidadeEstadosFinais();
+    } else {
+        qtdEstadosFinais = qtd;
+    }
 }
 
 void PerguntaEstadosFinais() {
@@ -114,12 +133,11 @@ void PerguntaSequenciaDeEstados() {
     }
 }
 
-
 void ZerarVetorEstadosFinais() {
-    // TODO: zerar o vetor dos estados finais
-    // esse vetor será um vetor booleano, onde a posição
-    // do estado vai indicar se o estado é (1) ou não (0)
-    // um estado final
+    int i;
+    for (i = 0; i < sizeof(estadosFinais); i++) {
+        estadosFinais[i] = 0;
+    }
 }
 
 /*void GeraPrograma(){
