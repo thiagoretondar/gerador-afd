@@ -32,9 +32,9 @@ int main(int argc, char const *argv[]) {
 
     if (!aceito) {
         printf("%s\n", argv[1]);
-        printf("%*s" "%s\n", p - 1, " ", "^");
+        printf("%*s" "%s\n", p, " ", "^");
         int i;
-        for (i = 0; i < p - 1; ++i) {
+        for (i = 0; i < p; ++i) {
             putchar('_');
         }
         printf("|\n");
@@ -44,6 +44,7 @@ int main(int argc, char const *argv[]) {
 }
 
 void proximaLetra() {
+
     p++;
 }
 
@@ -55,12 +56,12 @@ void proximoEstado(void (*proxEstado)()) {
     (*proxEstado)();
 }
 
-void finalizaOuVaiParaEstadoInicial(void (*estadoInicial)()) {
+void finalizaOuVaiParaEstadoInicial(void (*proxEstado)()) {
     proximaLetra();
     if (f[p] == 0) { // não existe mais nada para analisar
         aceita();
     } else { // existe string para ser analisada
-        (*estadoInicial)(); // manda para o começo
+        (*proxEstado)(); // manda para o começo
     }
 }
 
