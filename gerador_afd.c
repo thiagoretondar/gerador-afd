@@ -3,6 +3,10 @@
 #include <locale.h>
 #include <string.h>
 
+#define ESTADO 0
+#define SIMBOLO 1
+#define PROXESTADO 2
+
 int qtdSimbolos = 0,
     qtdEstados = 0,
     qtdEstadosFinais = 0;
@@ -18,6 +22,18 @@ char estadosFinais[20];
 //   [0][1][0] => estado0 ; simbolo1 ; vaiParaEstadoE0
 //   [1][2][1] => estado1 ; simbolo2 ; vaiParaEstadoE1
 // ]
+/*
+[
+[0,0,-1]
+[0,1,0]
+
+[1,0,2]
+[1,1,3]
+
+[2,0,1]
+[2,1,2]
+]
+*/
 int sequenciaEstados[20][3];
 
 // Cabeçalhos
@@ -36,9 +52,14 @@ void GeraProgramaGOTO();
 void GeraProgramaFunc();
 
 void ZerarVetorEstadosFinais();
+void insereEstado();
+
+void geraEstadoIntermediario();
+void geraEstadoFinal();
 
 int main (int argc, char const *argv[]) {
     setlocale(LC_ALL, "Portuguese");
+/*
     PerguntaQuantidadeSimbolos();
 	PerguntaSimbolos();
     PerguntaQuantidadeEstados();
@@ -48,16 +69,43 @@ int main (int argc, char const *argv[]) {
     PerguntaSequenciaDeEstados();
 
     // imprime vetor de sequencia
-    /*int i, j, total = 0;
+    int i, j, total = 0;
     char numeroEstado[2];
     for (i = 0; i < qtdEstados; i++) {
         for (j = 0; j < qtdSimbolos; j++) {
             printf("[%d,%d,%d]\n", sequenciaEstados[total][0],sequenciaEstados[total][1], sequenciaEstados[total][2]);
             total++;
         }
-    }*/
+    }
+*/
+    geraEstadoIntermediario(0, 'l', 2);
+    geraEstadoFinal(0, 'l', 2);
 
     return 0;
+}
+
+void GeraEstadoInicial() {}
+
+void geraEstadoFinal(int numEstado, char* estadoAtual, int numProxEstado) {
+
+    printf("void e%d() {\n" 
+        "\tif (f[p] == '%c') {\n"
+        "\t\tfinalizaOuVaiParaEstadoInicial(&e%d);\n"
+        "\t} else {\n"
+        "\t\trejeita();\n"
+        "\t}\n"
+    "}\n", numEstado, estadoAtual, numProxEstado);
+}
+
+void geraEstadoIntermediario(int numEstado, char* estadoAtual, int numProxEstado) {
+
+    printf("void e%d() {\n" 
+        "\tif (f[p] == '%c') {\n "
+            "\t\tproximoEstado(&e%d); \n"
+        "\t} else {\n"
+            "\t\trejeita(); \n"
+        "\t}\n"
+    "}\n", numEstado, estadoAtual, numProxEstado);
 }
 
 void PerguntaQuantidadeSimbolos() {
@@ -123,14 +171,19 @@ void PerguntaSequenciaDeEstados() {
 
             int proxEstado = atoi(numeroEstado);
 
-            sequenciaEstados[total][0] = i;
-            sequenciaEstados[total][1] = j;
-            sequenciaEstados[total][2] = proxEstado;
-
-            total++;
+            insereEstado(&total, i, j, proxEstado);
         }
         printf("\n");
     }
+}
+
+void insereEstado(int *posicao, int estado, int simbolo, int proxEstado) {
+    sequenciaEstados[*posicao][0] = estado;
+    sequenciaEstados[*posicao][1] = simbolo;
+    sequenciaEstados[*posicao][2] = proxEstado;
+
+    // incrementa para a próxima posição
+    (*posicao)++;
 }
 
 void ZerarVetorEstadosFinais() {
@@ -175,7 +228,18 @@ void GeraProgramaGOTO(char * NomeArq){
 
     fclose(NovoPrograma);
 
+}*/
+
+/*
+void e1() { // estado intermediário
+
+    if (f[p] == 'l') {
+        proximoEstado(&e2);
+    } else {
+        rejeita();
+    }
 }
+*/
 
 void GeraProgramaFunc(char * NomeArq){
 
@@ -196,4 +260,4 @@ void GeraProgramaFunc(char * NomeArq){
 void MontaMatrizEntrada(){
 
 
-}*/
+}
