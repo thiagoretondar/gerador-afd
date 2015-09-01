@@ -56,7 +56,7 @@ void proximoEstado(void (*proxEstado)()) {
     (*proxEstado)();
 }
 
-void finalizaOuVaiParaEstadoInicial(void (*proxEstado)()) {
+void finalizaOuVaiParaEstado(void (*proxEstado)()) {
     proximaLetra();
     if (f[p] == 0) { // não existe mais nada para analisar
         aceita();
@@ -68,9 +68,9 @@ void finalizaOuVaiParaEstadoInicial(void (*proxEstado)()) {
 void e0() {
 
     if (f[p] == 'a') { // estado inicial e final
-       finalizaOuVaiParaEstadoInicial(&e0);
+       finalizaOuVaiParaEstado(&e0);
     } else if (f[p] == 'b') { // estado inicial e final
-       finalizaOuVaiParaEstadoInicial(&e0);
+       finalizaOuVaiParaEstado(&e0);
     } else if (f[p] == 'e') { // estado inicial
         proximoEstado(&e1);
     } else if (f[p] == 'i') { // estado inicial
@@ -101,7 +101,7 @@ void e2() { // estado intermediário
 void e3() { // pode ser estado final
 
     if (f[p] == 'e') {
-        finalizaOuVaiParaEstadoInicial(&e0);
+        finalizaOuVaiParaEstado(&e0);
     } else {
         rejeita();
     }
@@ -110,7 +110,7 @@ void e3() { // pode ser estado final
 void e4() { // pode ser estado final
 
     if (f[p] == 'f') {
-        finalizaOuVaiParaEstadoInicial(&e0);
+        finalizaOuVaiParaEstado(&e0);
     } else {
         rejeita();
     }

@@ -3,9 +3,11 @@
 #include <locale.h>
 #include <string.h>
 
+// Enums
 #define ESTADO 0
 #define SIMBOLO 1
-#define PROXESTADO 2
+#define PROX_ESTADO 2
+#define ESTADO_INEXISTENTE -1
 
 int qtdSimbolos = 0,
     qtdEstados = 0,
@@ -13,10 +15,10 @@ int qtdSimbolos = 0,
 
 int estadoInicial = 0;
 
-char simbolos[20];
+char* simbolos[20];
 
 // TODO: fazer um vetor de inteiro booleano, onde a posicao indica se é ou não estado final
-char estadosFinais[20];
+int estadosFinais[20];
 
 // [
 //   [0][1][0] => estado0 ; simbolo1 ; vaiParaEstadoE0
@@ -55,11 +57,12 @@ void ZerarVetorEstadosFinais();
 void insereEstado();
 
 void geraEstadoIntermediario();
-void geraEstadoFinal();
+void geraEstadosFinais();
+void geraEstadoInicial();
 
 int main (int argc, char const *argv[]) {
     setlocale(LC_ALL, "Portuguese");
-/*
+
     PerguntaQuantidadeSimbolos();
 	PerguntaSimbolos();
     PerguntaQuantidadeEstados();
@@ -77,35 +80,127 @@ int main (int argc, char const *argv[]) {
             total++;
         }
     }
-*/
-    geraEstadoIntermediario(0, 'l', 2);
-    geraEstadoFinal(0, 'l', 2);
+    /*int i;
+    for (i = 0; i < qtdEstadosFinais; i++) {
+        printf("%d ", estadosFinais[i]);
+    }*/
+
+    //geraEstadoIntermediario(0, 'l', 2);
+    geraEstadoInicial();
+    geraEstadosFinais();
 
     return 0;
 }
 
-void GeraEstadoInicial() {}
+void geraEstadoInicial() {
+    printf("void e%d() {\n", estadoInicial);
 
-void geraEstadoFinal(int numEstado, char* estadoAtual, int numProxEstado) {
+        printf("\t");
+        // índice é uma relação de multiplicação do estadoInicial indicado
+        // e a quantidade de símbolos existentes
+        int i = estadoInicial * qtdSimbolos;
 
-    printf("void e%d() {\n" 
-        "\tif (f[p] == '%c') {\n"
-        "\t\tfinalizaOuVaiParaEstadoInicial(&e%d);\n"
-        "\t} else {\n"
-        "\t\trejeita();\n"
-        "\t}\n"
-    "}\n", numEstado, estadoAtual, numProxEstado);
+        // quantidade de iterações é a soma do índice inicial mais a quantidade
+        // de símbolos existentes
+        int qtd = i + qtdSimbolos;
+
+        for (i; i < qtd; i++) {
+            int* estadoAtual = sequenciaEstados[i];
+
+            if (estadoAtual[PROX_ESTADO] != ESTADO_INEXISTENTE) {
+                printf("if (f[p] == '%c') {\n", simbolos[estadoAtual[SIMBOLO]]);
+
+                // verifica se o estado o próximo estado é o mesmo estado que
+                // está sendo analisado atualmente
+                // se for, imprime função para verificar se existe algo ainda pra ler
+                // caso contrário, apenas chama o próximo estado
+                if (estadoAtual[ESTADO] == estadoAtual[PROX_ESTADO]) {
+                    printf("\t\tif (temAlgoPraAnalisar()) {\n");
+                        printf("\t\t\tproximoEstado(&e%d);\n", estadoAtual[ESTADO]);
+                    printf("\t\t} else {\n");
+                        printf("\t\t\taceita();\n");
+                    printf("\t\t}\n");
+                } else {
+                    printf("\t\tproximoEstado(&e%d)\n", estadoAtual[PROX_ESTADO]);
+                }
+
+            printf("\t} else ");
+            }
+
+        }
+
+        printf(" {\n");
+            printf("\t\trejeita();\n");
+        printf("\t}\n");
+
+    printf("}\n");
 }
 
-void geraEstadoIntermediario(int numEstado, char* estadoAtual, int numProxEstado) {
+/*
+0 = a
+1 = b
+2 = c
+3 = x
 
-    printf("void e%d() {\n" 
-        "\tif (f[p] == '%c') {\n "
-            "\t\tproximoEstado(&e%d); \n"
-        "\t} else {\n"
-            "\t\trejeita(); \n"
-        "\t}\n"
-    "}\n", numEstado, estadoAtual, numProxEstado);
+e = 1 * 3
+            [0,0,1] => vai para e1 se letra = a
+            [0,1,-1] => rejeita
+            [0,2,-1] => rejeita
+
+            [1,0,-1] => não faz nada
+            [1,1,0] => é estado final, mas pode ir para e0 se letra = b
+            [1,2,2] => é estado final, mas pode ir para e2 se letra = c
+            
+            [2,0,-1] => não faz nada 
+            [2,1,-1] => não faz nada
+            [2,2,-1] => não faz nada
+            */
+void geraEstadoFinal(int numEstado, char* simbolo) {    
+
+    
+    printf("void e%d() {\n", numEstado);
+        printf("\tif (f[p] == '%c') {\n", simbolo);
+            printf("\t\taceita();\n");
+        printf("\t} else {\n");
+            printf("\t\trejeita();\n");
+        printf("\t}\n");
+    printf("}\n");
+    
+    /*int i;
+    for (i = 0; i < qtdEstadosFinais; i++) {
+        int* estadoAtual = sequenciaEstados[estadosFinais[i] * qtdSimbolos];
+
+        printf("void e%d() {\n", estadoAtual[ESTADO]); 
+            printf("\tif (f[p] == '%c') {\n", simbolos[estadoAtual[ESTADO]]);
+                if (estadoAtual[PROX_ESTADO] == ESTADO_INEXISTENTE) {
+                    printf("aceita\n");
+                }
+
+                printf("\t\tfinalizaOuVaiParaEstado(&e%d);\n", simbolos[estadoAtual[PROX_ESTADO]]);
+            printf("\t} else {\n");
+                printf("\t\trejeita();\n");
+            printf("\t}\n");
+        printf("}\n");
+    }*/
+}
+
+void geraEstadoIntermediarioOuFinal(int numEstado, char* estadoAtual, int numProxEstado) {
+    /*
+    printf("void e%d() {", numEstado);
+
+        printf("if (f[p] != 0) {");
+            if (f[p] == 'b') {
+                proximoEstado(&e0);
+            } else if(f[p] == 'c') {
+                proximoEstado(&e2);
+            } else {
+                rejeita();
+            }
+        } else {
+            aceita();
+        }
+    }
+    */
 }
 
 void PerguntaQuantidadeSimbolos() {
@@ -118,7 +213,7 @@ void PerguntaSimbolos() {
     for (i = 0; i < qtdSimbolos && i < sizeof(simbolos) ; i++) {
         //Qual o simbolo será inputado no alfabeto
         printf("\t%d. Qual é o símbolo %d? R: ", i + 1, i);
-        scanf("\t%s", &simbolos[i]);
+        scanf("\t%c", &simbolos[i]);
     }
 }
 
@@ -157,7 +252,7 @@ void PerguntaEstadosFinais() {
     int i;
     for (i = 0; i < qtdEstadosFinais; i++) {
         printf("\t%d. Qual o estado final %d? R: ", i + 1, i);
-        scanf("%s", &estadosFinais[i]);
+        scanf("%d", &estadosFinais[i]);
     }
 }
 
