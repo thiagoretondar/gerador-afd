@@ -60,7 +60,7 @@ int main (int argc, char const *argv[]) {
     setlocale(LC_ALL, "Portuguese");
 
     perguntaQuantidadeSimbolos();
-	perguntaSimbolos();
+    perguntaSimbolos();
     perguntaQuantidadeEstados();
     perguntaEstadoInicial();
     perguntaQuantidadeEstadosFinais();
