@@ -391,20 +391,6 @@ int ehApenasEstadoFinal(int numEstado) {
     return true;
 }
 
-/*void geraProgramaGOTO(char * nomeArq){
-
-    int i=0;
-	strcat(nomeArq,".c");
-	FILE * NovoPrograma;
-    NovoPrograma = fopen(nomeArq, "w");
-
-    fputs("#include <stdio.h>\r#include <conio.h>\r#include <stdlib.h>\n\r",NovoPrograma);
-    fputs("int main(){\r\tchar f[200];\r\tint p;\r\t",NovoPrograma);
-
-    fclose(NovoPrograma);
-
-}*/
-
 void geraProgramaFunc(){
 
     char* includes = "#include <stdio.h>\n"
@@ -448,12 +434,11 @@ void geraProgramaFunc(){
 
     char *main_function2 = "\tif (!aceito) { \n"
                         "\t\tprintf(\"%%s\\n\", argv[1]); \n"
-                        "\t\tprintf(\"%%*s\" \"%%s\\n\", p, \" \", \"^\"); \n"
-                        "\t\tint i; \n"
-                        "\t\tfor (i = 0; i < p; ++i) { \n"
-                            "\t\t\tputchar('_'); \n"
-                        "\t\t} \n"
-                        "\t\tprintf(\"|\\n\"); \n"
+                        "\t\tif (p == 0) {\n"
+                        "\t\t\tprintf(\"^\\n\");\n"
+                        "\t\t} else {\n"
+                        "\t\t\tprintf(\"%%*s\" \"%%s\\n\", p - 1, \" \", \"^\"); \n"
+                        "\t\t}\n"
                     "\t} \n"
                     "\n"
                     "\treturn 0; \n"
