@@ -72,8 +72,8 @@ int main (int argc, char const *argv[]) {
     // percorre pela matriz para chamar as funções que criam 
     // estados intermediários, estados intermediários finais
     // e estados finais
-    int i;
-    for (i; i < qtdEstados * qtdSimbolos; i++) {
+    int i = 0;
+    for (i; i < qtdEstados * qtdSimbolos; i += qtdSimbolos) {
         int* estadoAtual = sequenciaEstados[i];
 
         // se o loop estiver analisando a faixa relacionada ao
@@ -81,7 +81,6 @@ int main (int argc, char const *argv[]) {
         // de símbolos (qtdSimbolos)
         if (estadoAtual[NUM_ESTADO] == estadoInicial) {
             geraEstadoInicial();
-            i += qtdSimbolos;
             continue; // ignora o resto dos comandos dessa iteração
         } else {
             if (ehEstadoFinal(estadoAtual[NUM_ESTADO])) { // estados finais (intermediários ou não)
@@ -93,7 +92,6 @@ int main (int argc, char const *argv[]) {
             } else { // estado intermediário
                 geraEstadoIntermediario(estadoAtual[NUM_ESTADO]);
             }
-            i += qtdSimbolos;
         }
     }
 
@@ -434,7 +432,7 @@ void geraProgramaFunc(){
 
     char *main_function2 = "\tif (!aceito) { \n"
                         "\t\tprintf(\"%%s\\n\", argv[1]); \n"
-                        "\t\tif (p == 0) {\n"
+                        "\t\tif (p <= 1) {\n"
                         "\t\t\tprintf(\"^\\n\");\n"
                         "\t\t} else {\n"
                         "\t\t\tprintf(\"%%*s\" \"%%s\\n\", p - 1, \" \", \"^\"); \n"
