@@ -40,3 +40,9 @@ Ao executar o programa...
 Qual o nome do programa? *R:Aula*
 Comor quer gerar (1=goto, 2=funcao)? *R: 1*
 Programa aula.c gerado
+
+#### HOW TO USE
+```bash
+gcc gerador_afd.c -o gerador_afd.o
+./gerador_afd.o
+```
