@@ -146,7 +146,7 @@ void geraEstadoInicial() {
 
 void geraEstadoIntermediario(int numEstado) {
 
-    fprintf(novoPrograma,"void e%d() { //estado intermediário\n", numEstado);
+    fprintf(novoPrograma,"void e%d() {\n", numEstado);
 
         // índice é uma relação de multiplicação do numEstado indicado
         // e a quantidade de símbolos existentes
@@ -455,16 +455,6 @@ void geraProgramaFunc(){
                         "\n"
                         "\t// chama a próxima função\n"
                         "\t(*proxEstado)();\n"
-                    "}\n"
-                    "\n"
-                    "void finalizaOuVaiParaEstadoInicial(void (*proxEstado)()) {\n"
-                    "\n"
-                        "\tproximaLetra();\n"
-                        "\tif (!temAlgoParaAnalisar()) { // não existe mais nada para analisar\n"
-                            "\t\taceita();\n"
-                        "\t} else { // existe string para ser analisada\n"
-                            "\t\t(*proxEstado)(); // manda para o começo\n"
-                        "\t}\n"
                     "}\n"
                     "\n"
                     "int temAlgoParaAnalisar() {\n"
