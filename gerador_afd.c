@@ -137,6 +137,15 @@ void geraEstadoInicial() {
 
         }
 
+        // verifica se o estado inicial é um estado final
+        // se for, imprime um if, permitindo entrada em branco
+        // como uma entrada válida (aceita)
+        if (ehEstadoFinal(estadoInicial)) {
+            fprintf(novoPrograma,"if (!temAlgoParaAnalisar()) {\n");
+                fprintf(novoPrograma,"\t\taceita();\n");
+            fprintf(novoPrograma,"\t} else ");
+        }
+
         fprintf(novoPrograma," {\n");
             fprintf(novoPrograma,"\t\trejeita();\n");
         fprintf(novoPrograma,"\t}\n");
@@ -430,7 +439,7 @@ void geraProgramaFunc(){
     char chamada_estado_inicial[10];
     sprintf(chamada_estado_inicial, "\n\te%d(); \n\n", estadoInicial);
 
-    char *main_function2 = "\tif (!aceito) { \n"
+    char *main_function2 = "\tif (!aceito && argc == 2) { \n"
                         "\t\tprintf(\"%%s\\n\", argv[1]); \n"
                         "\t\tif (p <= 1) {\n"
                         "\t\t\tprintf(\"^\\n\");\n"
