@@ -122,7 +122,7 @@ void geraEstadoInicial() {
                 // está sendo analisado atualmente
                 // se for, imprime função para verificar se existe algo ainda pra ler
                 // caso contrário, apenas chama o próximo estado
-                if (estadoAtual[NUM_ESTADO] == estadoAtual[PROX_ESTADO]) {
+                if (estadoAtual[NUM_ESTADO] == estadoAtual[PROX_ESTADO] && ehEstadoFinal(estadoAtual[NUM_ESTADO])) {
                     fprintf(novoPrograma,"\t\tif (temAlgoParaAnalisarNoEstadoInicial()) {\n");
                         fprintf(novoPrograma,"\t\t\tproximoEstado(&e%d);\n", estadoAtual[NUM_ESTADO]);
                     fprintf(novoPrograma,"\t\t} else {\n");
