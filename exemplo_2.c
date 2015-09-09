@@ -32,7 +32,7 @@ int main(int argc, char const *argv[]) {
 
 	e0(); 
 
-	if (!aceito) { 
+	if (!aceito && argc == 2) {
 		printf("%s\n", argv[1]); 
 		if (p <= 1) {
 			printf("^\n");
@@ -57,16 +57,6 @@ void proximoEstado(void (*proxEstado)()) {
 
 	// chama a próxima função
 	(*proxEstado)();
-}
-
-void finalizaOuVaiParaEstadoInicial(void (*proxEstado)()) {
-
-	proximaLetra();
-	if (!temAlgoParaAnalisar()) { // não existe mais nada para analisar
-		aceita();
-	} else { // existe string para ser analisada
-		(*proxEstado)(); // manda para o começo
-	}
 }
 
 int temAlgoParaAnalisar() {
@@ -116,12 +106,14 @@ void e0() {
 		} else {
 			aceita();
 		}
+	} else if (!temAlgoParaAnalisar()) {
+		aceita();
 	} else  {
 		rejeita();
 	}
 }
 
-void e1() { //estado intermediário
+void e1() {
 	if (temAlgoParaAnalisar()) {
 		{
 			rejeita();
