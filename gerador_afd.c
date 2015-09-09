@@ -23,7 +23,7 @@ int estadoInicial = 0;
 
 char* simbolos[60];
 
-// TODO: fazer um vetor de inteiro booleano, onde a posicao indica se é ou não estado final
+// vetor de inteiro booleano, onde a posicao indica se é ou não estado final
 int estadosFinais[60];
 
 // [
@@ -83,14 +83,10 @@ int main (int argc, char const *argv[]) {
             geraEstadoInicial();
             continue; // ignora o resto dos comandos dessa iteração
         } else {
-            if (ehEstadoFinal(estadoAtual[NUM_ESTADO])) { // estados finais (intermediários ou não)
-                if (ehApenasEstadoFinal(estadoAtual[NUM_ESTADO])) { // estado final
-                    geraEstadoFinal(estadoAtual[NUM_ESTADO]);
-                } else { // estado intermediário e final
-                    geraEstadoIntermediarioFinal(estadoAtual[NUM_ESTADO]);
-                }
-            } else { // estado intermediário
-                geraEstadoIntermediario(estadoAtual[NUM_ESTADO]);
+            if (ehApenasEstadoFinal(estadoAtual[NUM_ESTADO])) { // estado final
+                geraEstadoFinal(estadoAtual[NUM_ESTADO]);
+            } else {
+                geraEstadoIntermediario(estadoAtual[NUM_ESTADO]); // estado intermediário (final ou não)
             }
         }
     }
@@ -186,51 +182,16 @@ void geraEstadoIntermediario(int numEstado) {
                     fprintf(novoPrograma,"\t\t\trejeita();\n");
                 fprintf(novoPrograma,"\t\t}\n");
 
-        // se não tem mais nada para analisar, rejeita, pois não é um estado final
-        fprintf(novoPrograma,"\t} else {\n");
-            fprintf(novoPrograma,"\t\trejeita();\n");
-        fprintf(novoPrograma,"\t}\n");
 
-    fprintf(novoPrograma,"}\n\n");
-}
-
-void geraEstadoIntermediarioFinal(int numEstado) {
-    
-    fprintf(novoPrograma,"void e%d() {\n", numEstado);
-
-        // índice é uma relação de multiplicação do numEstado indicado
-        // e a quantidade de símbolos existentes
-        int i = numEstado * qtdSimbolos;
-
-        // quantidade de iterações é a soma do índice inicial mais a quantidade
-        // de símbolos existentes
-        int qtd = i + qtdSimbolos;
-
-        fprintf(novoPrograma,"\tif (temAlgoParaAnalisar()) {\n");
-            fprintf(novoPrograma,"\t\t");
-
-            // percorre todos os estados do subarray do numEstado
-            for (i; i < qtd; i++) {
-                // armazena na variável estadoAtual o subarray
-                int* estadoAtual = sequenciaEstados[i];
-
-                // imprime a chamada para o próximo estado caso essa exista
-                if (estadoAtual[PROX_ESTADO] != ESTADO_INEXISTENTE) {
-                    fprintf(novoPrograma,"if (f[p] == '%c') {\n", simbolos[estadoAtual[NUM_SIMBOLO]]);
-                        fprintf(novoPrograma,"\t\t\tproximoEstado(&e%d);\n", estadoAtual[PROX_ESTADO]);
-                    fprintf(novoPrograma,"\t\t} else ");
-                } 
+            fprintf(novoPrograma,"\t} else {\n");
+            if (ehEstadoFinal(numEstado)) {
+                // se não tem mais nada para analisar, aceita, pois é um estado final
+                fprintf(novoPrograma,"\t\taceita();\n");
+            } else {
+                // se não tem mais nada para analisar, rejeita, pois não é um estado final
+                fprintf(novoPrograma,"\t\trejeita();\n");
             }
-
-                // se nenhuma letra combinar, rejeita a sequencia
-                fprintf(novoPrograma,"{\n");
-                    fprintf(novoPrograma,"\t\t\trejeita();\n");
-                fprintf(novoPrograma,"\t\t}\n");
-
-        // se não tem mais nada para analisar, aceita, pois é um estado final
-        fprintf(novoPrograma,"\t} else {\n");
-            fprintf(novoPrograma,"\t\taceita();\n");
-        fprintf(novoPrograma,"\t}\n");
+            fprintf(novoPrograma,"\t}\n");
 
     fprintf(novoPrograma,"}\n\n");
 }
@@ -298,12 +259,18 @@ void perguntaQuantidadeEstadosFinais() {
 
 void perguntaEstadosFinais() {
 
+    // seta todos os elementos como zero no vetor binário
     zerarVetorEstadosFinais();
 
     int i;
     for (i = 0; i < qtdEstadosFinais; i++) {
         printf("\t%d. Qual o estado final %d? R: ", i + 1, i);
-        scanf("%d", &estadosFinais[i]);
+        int posEstadoFinal;
+        scanf("%d", &posEstadoFinal);
+
+        // seta a posição no vetor de acordo com o número do estado
+        // como 1 (true - é estado final naquela posição).
+        estadosFinais[posEstadoFinal] = 1;
     }
 }
 
@@ -371,16 +338,13 @@ void zerarVetorEstadosFinais() {
 
 int ehEstadoFinal(int numEstado) {
 
-    // percorre vetores de estados finais para 
-    // verificar se numEstado é final
-    int i;
-    for (i = 0; i < qtdEstadosFinais; i++) {
-        if (numEstado == estadosFinais[i]) {
-            return true;
-        }
+    // vai na posição numEstado e verifica se é (valor 1)
+    // ou não (valor 0) um estado final
+    if (estadosFinais[numEstado] == 0) {
+        return false;
     }
 
-    return false;
+    return true;
 }
 
 int ehApenasEstadoFinal(int numEstado) {
