@@ -21,7 +21,7 @@ int qtdSimbolos = 0,
 
 int estadoInicial = 0;
 
-char* simbolos[60];
+char simbolos[60];
 
 // vetor de inteiro booleano, onde a posicao indica se é ou não estado final
 int estadosFinais[60];
@@ -404,11 +404,11 @@ void geraProgramaFunc(){
     sprintf(chamada_estado_inicial, "\n\te%d(); \n\n", estadoInicial);
 
     char *main_function2 = "\tif (!aceito && argc == 2) { \n"
-                        "\t\tprintf(\"%%s\\n\", argv[1]); \n"
+                        "\t\tprintf(\"%s\\n\", argv[1]); \n"
                         "\t\tif (p <= 1) {\n"
                         "\t\t\tprintf(\"^\\n\");\n"
                         "\t\t} else {\n"
-                        "\t\t\tprintf(\"%%*s\" \"%%s\\n\", p - 1, \" \", \"^\"); \n"
+                        "\t\t\tprintf(\"%*s\" \"%s\\n\", p - 1, \" \", \"^\"); \n"
                         "\t\t}\n"
                     "\t} \n"
                     "\n"
@@ -464,12 +464,12 @@ void geraProgramaFunc(){
 
     novoPrograma = fopen(nomeArq, "w+");
 
-    fprintf(novoPrograma, includes);
-    fprintf(novoPrograma, defines);
-    fprintf(novoPrograma, variaveisDeControle);
-    fprintf(novoPrograma, cabecalhos);
-    fprintf(novoPrograma, main_function);
-    fprintf(novoPrograma, chamada_estado_inicial);
-    fprintf(novoPrograma, main_function2);
-    fprintf(novoPrograma, funcoes);
+    fputs(includes, novoPrograma);
+    fputs(defines, novoPrograma);
+    fputs(variaveisDeControle, novoPrograma);
+    fputs(cabecalhos, novoPrograma);
+    fputs(main_function, novoPrograma);
+    fputs(chamada_estado_inicial, novoPrograma);
+    fputs(main_function2, novoPrograma);
+    fputs(funcoes, novoPrograma);
 }
