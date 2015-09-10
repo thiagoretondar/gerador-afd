@@ -212,6 +212,11 @@ void perguntaQuantidadeSimbolos() {
 
     printf("Quantos símbolos tem o alfabeto? R: ");
     scanf("%d", &qtdSimbolos);
+
+    if (qtdSimbolos <= 0) {
+        printf("[ERRO] Deve possuir ao menos um símbolo!\n");
+        perguntaQuantidadeSimbolos();
+    }
 }
 
 void perguntaSimbolos() {
@@ -228,12 +233,22 @@ void perguntaQuantidadeEstados() {
 
     printf("Quantos estados? R: ");
     scanf("%d", &qtdEstados);
+
+    if (qtdEstados <= 0) {
+        printf("[ERRO] Deve possuir ao menos um estado!\n");
+        perguntaQuantidadeEstados();
+    }
 }
 
 void perguntaEstadoInicial() {
 
     printf("Qual o estado inicial? R: ");
     scanf("%d", &estadoInicial);
+
+    if (estadoInicial < 0 || estadoInicial >= qtdEstados) {
+        printf("[ERRO] Estado inicial fora da faixa permitida. Deve estar entre 0 e %d!\n", qtdEstados  - 1);
+        perguntaEstadoInicial();
+    }
 }
 
 void perguntaQuantidadeEstadosFinais() {
@@ -245,12 +260,10 @@ void perguntaQuantidadeEstadosFinais() {
 
     // quantidade de estados finais não pode ser maior que quantidade de estados totais
     if (qtd > qtdEstados) {
-        printf("ERRO: quantidade de estados finais maior do que a quantidade de estados totais!\n");
-        printf("Digite novamente\n");
+        printf("[ERRO] Quantidade de estados finais maior do que a quantidade de estados totais!\n");
         perguntaQuantidadeEstadosFinais();
     } else if (qtd <= 0) { // deve exister um estado final
-        printf("ERRO: quantidade de estados finais menor do que zero!\n");
-        printf("Digite novamente\n");
+        printf("[ERRO] Quantidade de estados finais menor do que zero!\n");
         perguntaQuantidadeEstadosFinais();
     } else {
         qtdEstadosFinais = qtd;
@@ -268,9 +281,15 @@ void perguntaEstadosFinais() {
         int posEstadoFinal;
         scanf("%d", &posEstadoFinal);
 
-        // seta a posição no vetor de acordo com o número do estado
-        // como 1 (true - é estado final naquela posição).
-        estadosFinais[posEstadoFinal] = 1;
+        if (posEstadoFinal < 0 || posEstadoFinal >= qtdEstados) {
+            printf("\t[ERRO] Estado final fora da faixa permitida. Deve estar entre 0 e %d!\n", qtdEstados - 1);
+            // volta uma posição no loop para refazer a pergunta
+            --i;
+        } else {
+            // seta a posição no vetor de acordo com o número do estado
+            // como 1 (true - é estado final naquela posição).
+            estadosFinais[posEstadoFinal] = 1;
+        }
     }
 }
 
@@ -279,6 +298,7 @@ void perguntaSequenciaDeEstados() {
     int i, j, total = 0;
     char numeroEstado[2];
     for (i = 0; i < qtdEstados; i++) {
+        printf("\n");
         for (j = 0; j < qtdSimbolos; j++) {
             printf("\tPara o estado e%d e símbolo %c qual o próximo estado? ", i, simbolos[j]);
             scanf("%s", numeroEstado);
@@ -286,9 +306,20 @@ void perguntaSequenciaDeEstados() {
             // realiza o casting de string para inteiro
             int proxEstado = atoi(numeroEstado);
 
-            insereEstado(&total, i, j, proxEstado);
+            // se for digitado um valor menor que zero, sempre sera -1
+            // para que o sistema possa trabalhar com esse dado
+            if (proxEstado < 0) {
+                proxEstado = -1;
+            }
+
+            if (proxEstado >= qtdEstados) {
+                printf("\t[ERRO] Próximo estado fora da faixa permitida. Deve estar entre -1 (estado inexisente) e %d!\n", qtdEstados - 1);
+                // volta uma posição no loop para refazer a pergunta
+                --j;
+            } else {
+                insereEstado(&total, i, j, proxEstado);
+            }
         }
-        printf("\n");
     }
 }
 
