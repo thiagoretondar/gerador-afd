@@ -1,3 +1,8 @@
+/*
+ * @author Thiago Retondar - RA: 22113040-4
+ * @author Paulo Henrique - RA: 22113021-4
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <locale.h>
